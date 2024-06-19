@@ -1,0 +1,15 @@
+.logo{
+    width: 100%;
+    margin-left: 7%;
+}
+.logo-container{
+    width: 110px;
+}
+.navbar {
+    background-color: #48484A;
+
+}
+.main-section-navbar{
+    padding-left: 3%;
+    padding-right: 3%;
+}
