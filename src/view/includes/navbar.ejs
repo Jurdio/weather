@@ -5,32 +5,46 @@
     </a>
   </div>
 
-<div class="collapse navbar-collapse main-section-navbar" id="navbarNav">
-    <form action="/locations" method="get" style="background: transparent;">
-        <div style="display: flex; align-items: center;">
-            <i class="fas fa-search" style="margin-right: 10px; font-size: 0.8em; color: white;"></i>
-            <input
-                type="search"
-                id="city"
-                name="city"
-                placeholder="Weather in your city"
-                style="background: transparent; border: none; outline: none;"
-            />
-        </div>
+  <div class="collapse navbar-collapse main-section-navbar" id="navbarNav">
+    <form action="/locations" method="POST" style="background: transparent">
+      <div style="display: flex; align-items: center">
+        <i
+          class="fas fa-search"
+          style="margin-right: 10px; font-size: 0.8em; color: white"
+        ></i>
+        <input
+          type="search"
+          id="city"
+          name="city"
+          placeholder="Weather in your city"
+          style="background: transparent; border: none; outline: none"
+        />
+      </div>
     </form>
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="#">My Location</a>
-        </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">My Location</a>
+      </li>
     </ul>
-    
+
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Logout</a>
-        </li>
+      <% if (!isAuthenticated) { %>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+      <% } else { %>
+      <li class="nav-item">
+        <form action="/logout" method="post" style="display: inline">
+          <button
+            class="nav-link btn btn-link"
+            style="padding: 0; border: none; background: none"
+            type="submit"
+          >
+            Logout
+          </button>
+        </form>
+      </li>
+      <% } %>
     </ul>
-</div>
+  </div>
 </nav>
