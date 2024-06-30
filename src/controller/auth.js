@@ -1,46 +1,23 @@
-require('dotenv').config();
-const db = require("../sequelize/models/index");
-
-const crypto = require('crypto');
-const { validationResult } = require("express-validator");
+require("dotenv").config();
 const bcrypt = require("bcrypt");
+const db = require("../sequelize/models/index");
+const { createSession, deleteSession } = require("../service/session");
+
 
 
 exports.getLogin = (req, res) => {
-  let message = req.flash("error");
-  if (message.length > 0) {
-    message = message[0];
-  } else {
-    message = null;
-  }
   res.render("login", {
     path: "/login",
     pageTitle: "Login",
-    errorMessage: message,
+    errorMessage: null,
     oldInput: {
       email: "",
       password: "",
     },
-    validationErrors: [],
   });
 };
 exports.postLogin = (req, res) => {
   const { email, password } = req.body;
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.log("Validation errors:", errors.array());
-    return res.status(422).render("login", {
-      path: "/login",
-      pageTitle: "Login",
-      errorMessage: errors.array()[0].msg,
-      oldInput: {
-        email: email,
-        password: password,
-      },
-      validationErrors: errors.array(),
-    });
-  }
 
   db.User.findOne({ where: { email: email } })
     .then((user) => {
@@ -54,31 +31,36 @@ exports.postLogin = (req, res) => {
             email: email,
             password: password,
           },
-          validationErrors: [],
         });
       }
       bcrypt
         .compare(password, user.password)
         .then((doMatch) => {
           if (doMatch) {
-            req.session.isLoggedIn = true;
-            req.session.user = user;
-            return req.session.save((err) => {
-              if (err) console.log("Session save error:", err);
-              res.redirect("/");
+            createSession(user.id) 
+              .then((sessionId) => {
+                res.cookie("session_id", sessionId, {
+                  httpOnly: true,
+                  secure: true,
+                }); 
+                res.redirect("/");
+              })
+              .catch((err) => {
+                console.log("Error creating session:", err);
+                res.status(500).send("Server error");
+              });
+          } else {
+            console.log("Password does not match for user:", email);
+            return res.status(422).render("login", {
+              path: "/login",
+              pageTitle: "Login",
+              errorMessage: "Invalid email or password.",
+              oldInput: {
+                email: email,
+                password: password,
+              },
             });
           }
-          console.log("Password does not match for user:", email);
-          return res.status(422).render("login", {
-            path: "/login",
-            pageTitle: "Login",
-            errorMessage: "Invalid email or password.",
-            oldInput: {
-              email: email,
-              password: password,
-            },
-            validationErrors: [],
-          });
         })
         .catch((err) => {
           console.log("Error comparing password:", err);
@@ -88,15 +70,9 @@ exports.postLogin = (req, res) => {
     .catch((err) => console.log("Error finding user:", err));
 };
 exports.getSignup = (req, res) => {
-  let message = req.flash("error");
-  if (message.length > 0) {
-    message = message[0];
-  } else {
-    message = null;
-  }
   res.render("signup", {
     pageTitle: "Signup",
-    errorMessage: message,
+    errorMessage: null,
     oldInput: {
       email: "",
       password: "",
@@ -108,23 +84,6 @@ exports.getSignup = (req, res) => {
 exports.postSignup = (req, res, next) => {
   const { email, password, confirmPassword } = req.body;
 
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    console.log(errors.array());
-
-    return res.status(422).render("signup", {
-      pageTitle: "Register",
-      errorMessage: errors.array()[0].msg,
-      oldInput: {
-        email: email,
-        password: password,
-        confirmPassword: req.body.confirmPassword,
-      },
-      validationErrors: errors.array(),
-    });
-  }
-
   bcrypt
     .hash(password, 12)
     .then((hashedPassword) => {
@@ -133,18 +92,22 @@ exports.postSignup = (req, res, next) => {
         password: hashedPassword,
       });
     })
-    .then(result => {
+    .then((result) => {
       res.redirect("/login");
-      })
+    })
     .catch((err) => {
       console.log(err);
     });
 };
 
 exports.postLogout = (req, res) => {
-  req.session.destroy((err) => {
-    console.log(err);
-    res.redirect("/");
-  });
+  deleteSession(req.cookies['session_id'])
+    .then(() => {
+      res.clearCookie('session_id');
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.error("Error deleting session from database:", err);
+      res.status(500).send("An error occurred.");
+    });
 };
-

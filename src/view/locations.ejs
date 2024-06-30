@@ -1,0 +1,46 @@
+<%- include('includes/head.ejs') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('includes/navbar.ejs') %>
+
+    <div class="container mt-5">
+        <div class="row">
+            <% locations.forEach(function(location) { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= location.name %></h5>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= location.state %>, <%= location.country %></h6>
+                            <% if(location.weather.weather && location.weather.weather.length > 0) { %>
+                                <img  src="https://openweathermap.org/img/wn/<%= location.weather.weather[0].icon %>@2x.png"
+                                     alt="<%= location.weather.weather[0].description %>"
+                                     title="<%= location.weather.weather[0].main %>">
+                                    
+             <% } %>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Min Temp</th>
+                                        <th scope="col">Max Temp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><%= location.weather.main.temp_min %>°C</td>
+                                        <td><%= location.weather.main.temp_max %>°C</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
