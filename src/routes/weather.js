@@ -1,4 +1,6 @@
-const router = require('express').Router();
+const express = require("express");
+
+const router = express.Router();
 
 const homeController = require('../controller/home');
 const weatherController = require('../controller/openWeather');

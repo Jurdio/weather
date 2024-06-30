@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-
+const { sequelize } = require('./sequelize/models/index');
 
 const weatherRouter = require('./routes/weather');
 const authRouter = require('./routes/auth');
