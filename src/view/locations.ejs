@@ -30,21 +30,20 @@
 
     <div class="container mt-5">
         <div class="row">
-            <% locations.forEach(function(location) { %>
+            <% locations.forEach(function(location, index) { %>
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><%= location.name %>
-                                <i class="far fa-star star"></i> <!-- Додавання зірочки -->
-                               
+                            <h5 class="card-title">
+                                <%= location.name %>
+                                <i class="far fa-star star"></i>
                             </h5>
                             <h6 class="card-subtitle mb-2 text-muted"><%= location.state %>, <%= location.country %></h6>
                             <% if(location.weather.weather && location.weather.weather.length > 0) { %>
-                                <img  src="https://openweathermap.org/img/wn/<%= location.weather.weather[0].icon %>@2x.png"
+                                <img src="https://openweathermap.org/img/wn/<%= location.weather.weather[0].icon %>@2x.png"
                                      alt="<%= location.weather.weather[0].description %>"
                                      title="<%= location.weather.weather[0].main %>">
-                                    
-             <% } %>
+                            <% } %>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -59,6 +58,17 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <!-- Рисочка для розгортання -->
+                            <div style="cursor: pointer;" data-toggle="collapse" data-target="#collapseDetail<%= index %>">
+                                <i class="fas fa-chevron-down"></i> Деталі
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Розгорнутий блок -->
+                    <div id="collapseDetail<%= index %>" class="collapse">
+                        <!-- Вміст розгорнутого блоку -->
+                        <div class="card card-body">
+                            Додаткова інформація тут...
                         </div>
                     </div>
                 </div>
