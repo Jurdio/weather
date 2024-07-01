@@ -13,3 +13,11 @@
     padding-left: 3%;
     padding-right: 3%;
 }
+@media (max-width: 768px) {
+    .logout-text {
+      display: none;
+    }
+    .logout-icon {
+      display: inline-block;
+    }
+  }

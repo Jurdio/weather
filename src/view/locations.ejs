@@ -22,8 +22,29 @@
     .rotate {
         animation: spin 0.5s ease-in-out;
     }
+    @media (max-width: 768px) {
+        .collapseContent {
+            display: block; /* Або інші стилі для адаптації */
+        }
+    }
 
 </style>
+<script>
+    function updateCollapseContent(index) {
+        // Base64-decode and then parse the JSON string
+        var encodedLocations = "<%= Buffer.from(JSON.stringify(locations)).toString('base64') %>";
+        var locations = JSON.parse(atob(encodedLocations));
+        var location = locations[index];
+        
+        var collapseContent = document.getElementById('collapseDetail').querySelector('.card-body');
+        collapseContent.innerHTML = 'Назва: ' + location.name + '<br>' +
+                                    'Країна: ' + location.country + '<br>' +
+                                    'Мінімальна температура: ' + location.weather.main.temp_min + '°C<br>' +
+                                    'Максимальна температура: ' + location.weather.main.temp_max + '°C';
+        
+        $('#collapseDetail').collapse('toggle');
+    }
+</script>
 </head>
 <body>
     <%- include('includes/navbar.ejs') %>
@@ -58,26 +79,26 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <!-- Рисочка для розгортання -->
-                            <div style="cursor: pointer;" data-toggle="collapse" data-target="#collapseDetail<%= index %>">
+                            <div style="cursor: pointer;" onclick="updateCollapseContent(<%= index %>)">
                                 <i class="fas fa-chevron-down"></i> Деталі
                             </div>
                         </div>
                     </div>
-                    <!-- Розгорнутий блок -->
-                    <div id="collapseDetail<%= index %>" class="collapse">
-                        <!-- Вміст розгорнутого блоку -->
-                        <div class="card card-body">
-                            Додаткова інформація тут...
-                        </div>
-                    </div>
+                    
                 </div>
             <% }); %>
         </div>
+        <!-- Розгорнутий блок поза картками -->
+    <div id="collapseDetail" class="collapse w-100">
+        <div class="card card-body">
+            Додаткова інформація тут...
+        </div>
+    </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    
     <script>
         $(document).ready(function(){
         $('body').on('click', '.star', function(){

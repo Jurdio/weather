@@ -4,49 +4,35 @@
       <img src="/image/appLogo.png" class="logo" alt="Weather App Logo" />
     </a>
   </div>
-
-  <div class="collapse navbar-collapse main-section-navbar" id="navbarNav">
-    <form action="/" method="POST" style="background: transparent;">
-      <div style="display: flex; align-items: center">
-        <button type="submit" style="background: transparent; border: none; padding: 0; cursor: pointer;">
-          <i class="fas fa-search" style="margin-right: 10px; font-size: 0.8em; color: white"></i>
-        </button>
-        <input
-          type="search"
-          id="city"
-          name="city"
-          placeholder="Weather in your city"
-          style="background: transparent; border: none; outline: none; color: white;"
-        />
-      </div>
-    </form>
-    <ul class="navbar-nav mr-auto">
+  <!-- Переміщення форми пошуку після логотипу -->
+  <form action="/" method="POST" class="form-inline ml-5 my-2 my-lg-0">
+    <div style="display: flex; align-items: center">
+      <button type="submit" style="background: transparent; border: none; padding: 0; cursor: pointer;">
+        <i class="fas fa-search" style="margin-right: 10px; font-size: 0.8em; color: white"></i>
+      </button>
+      <input
+        type="search"
+        id="city"
+        name="city"
+        placeholder="Weather in your city"
+        style="background: transparent; border: none; outline: none; color: white;"
+      />
+    </div>
+  </form>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+      <!-- Пункти меню "Мої локації" та "Вихід" -->
       <li class="nav-item">
         <a class="nav-link" href="#">My Location</a>
       </li>
-    </ul>
-
-    <ul class="navbar-nav ml-auto">
-      <% if (!isAuthenticated) { %>
       <li class="nav-item">
-        <a class="nav-link" href="/login">Login</a>
+        <a class="nav-link" href="#">
+          Logout <i class="fas fa-sign-out-alt"></i> 
+        </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/sign-up">Sign up</a>
-      </li>
-      <% } else { %>
-      <li class="nav-item">
-        <form action="/logout" method="post" style="display: inline">
-          <button
-            class="nav-link btn btn-link"
-            style="padding: 0; border: none; background: none"
-            type="submit"
-          >
-            Logout
-          </button>
-        </form>
-      </li>
-      <% } %>
     </ul>
   </div>
 </nav>
