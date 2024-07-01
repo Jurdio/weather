@@ -1,6 +1,29 @@
 <%- include('includes/head.ejs') %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+<style>
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    .table td, .table th {
+    text-align: center;
+}
+.star {
+        cursor: pointer;
+        color: #333; /* Темний колір для обводки */
+    }
+    .star.filled {
+        color: orange; /* Оранжевий колір для активної зірочки */
+    }
+    @keyframes spin {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(360deg);}
+    }
+    .rotate {
+        animation: spin 0.5s ease-in-out;
+    }
+
+</style>
 </head>
 <body>
     <%- include('includes/navbar.ejs') %>
@@ -11,7 +34,10 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"><%= location.name %></h5>
+                            <h5 class="card-title"><%= location.name %>
+                                <i class="far fa-star star"></i> <!-- Додавання зірочки -->
+                               
+                            </h5>
                             <h6 class="card-subtitle mb-2 text-muted"><%= location.state %>, <%= location.country %></h6>
                             <% if(location.weather.weather && location.weather.weather.length > 0) { %>
                                 <img  src="https://openweathermap.org/img/wn/<%= location.weather.weather[0].icon %>@2x.png"
@@ -40,7 +66,15 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <script>
+        $(document).ready(function(){
+        $('body').on('click', '.star', function(){
+            $(this).toggleClass('far fas filled rotate'); // Додає або видаляє класи для зміни іконки та анімації обертання
+            setTimeout(() => $(this).removeClass('rotate'), 500); // Видаляє клас rotate після завершення анімації
+        });
+    });
+    </script>
+    </body>
+    </html>
